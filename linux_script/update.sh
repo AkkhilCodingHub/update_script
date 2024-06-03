@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Starting the system update using Paru..."
-paru -Syu
+sudo paru --noconfirm -Syu
 
 echo "Starting the update process for Git repositories and pip packages..."
 
@@ -50,7 +50,7 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # Check if the virtual environment directory exists and activate it
-VENV_PATH="~/pip_env/bin/activate"
+VENV_PATH="$HOME/pip_env/bin/activate"
 if [ -f "$VENV_PATH" ]; then
     echo "Activating the virtual environment..."
     source "$VENV_PATH"
@@ -79,7 +79,7 @@ fi
 
 # Clear RAM cache
 echo "Clearing RAM cache..."
-sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
+sudo sync | sudo tee /proc/sys/vm/drop_caches
 echo "RAM cache cleared."
 
 echo "Update process completed."

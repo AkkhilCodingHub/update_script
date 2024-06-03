@@ -1,61 +1,48 @@
-function Check-WindowsUpdates {
+function Invoke-WindowsUpdates {
     Write-Host "Checking for Windows updates..."
-    # Check for Windows updates using PowerShell's Get-WindowsUpdateLog cmdlet
-    $windowsUpdateLog = Get-WindowsUpdateLog
-    if ($windowsUpdateLog -ne $null) {
+    $updateSession = New-Object -ComObject Microsoft.Update.Session
+    $updateSearcher = $updateSession.CreateUpdateSearcher()
+    $searchResult = $updateSearcher.Search("IsInstalled=0")
+    
+    if ($null -ne $searchResult.Updates) {
         Write-Host "Windows updates are available."
+        $searchResult.Updates | ForEach-Object { Write-Host $_.Title }
     } else {
         Write-Host "No Windows updates available."
     }
 }
 
-function Check-GitUpdate {
-    Write-Host "Checking for Git updates..."
-    $gitInstalled = $null
-    try {
-        # Check if Git is installed
-        $gitInstalled = (git --version) 2>&1
-    }
-    catch {
-        Write-Host "Git is not installed."
-        return
-    }
-
-    if ($gitInstalled -like "git version") {
-        # Check for updates
-        $updateCheck = git fetch --dry-run 2>&1
-        if ($updateCheck -notmatch "fatal: unable to access") {
-            Write-Host "Git updates are available."
-        } else {
-            Write-Host "No Git updates available."
+function Invoke-GitUpdate {
+    Write-Host "Updating all Git repositories on the system..."
+    $drives = Get-PSDrive -PSProvider 'FileSystem' | Where-Object { $null -ne $_.Used }
+    foreach ($drive in $drives) {
+        $driveRoot = $drive.Root
+        Write-Host "Searching for Git repositories in $driveRoot"
+        $gitRepos = Get-ChildItem -Path $driveRoot -Recurse -Directory -Filter ".git" -ErrorAction SilentlyContinue
+        foreach ($repo in $gitRepos) {
+            $repoDir = $repo.FullName
+            Write-Host "Updating repository at $repoDir"
+            Set-Location -Path $repoDir
+            Set-Location -Path ..
+            git fetch
+            git pull
+            Set-Location -Path $driveRoot
         }
     }
 }
 
-function Check-PipUpdate {
-    Write-Host "Checking for pip updates..."
-    $pipInstalled = $null
-    try {
-        # Check if pip is installed
-        $pipInstalled = (pip --version) 2>&1
+function Invoke-PipUpdate {
+    Write-Host "Updating all pip packages..."
+    $outdatedPackages = pip list --outdated --format=json
+    foreach ($package in $outdatedPackages) {
+        $packageName = $package -split '=='[0]
+        Write-Host "Updating $packageName..."
+        pip install --upgrade $packageName
     }
-    catch {
-        Write-Host "pip is not installed."
-        return
-    }
-
-    if ($pipInstalled -like "pip") {
-        # Check for updates
-        $outdatedPackages = pip list --outdated 2>&1
-        if ($outdatedPackages -match "Package") {
-            Write-Host "pip updates are available."
-        } else {
-            Write-Host "No pip updates available."
-        }
-    }
+    Write-Host "All pip packages have been updated."
 }
 
 Write-Host "Checking for updates..."
-Check-WindowsUpdates
-Check-GitUpdate
-Check-PipUpdate
+Invoke-WindowsUpdates
+Invoke-GitUpdate
+Invoke-PipUpdate
