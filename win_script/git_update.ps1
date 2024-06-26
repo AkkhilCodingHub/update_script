@@ -1,32 +1,20 @@
-function Invoke-WindowsUpdates {
-    Write-Host "Checking for Windows updates..."
-    $updateSession = New-Object -ComObject Microsoft.Update.Session
-    $updateSearcher = $updateSession.CreateUpdateSearcher()
-    $searchResult = $updateSearcher.Search("IsInstalled=0")
-    
-    if ($null -ne $searchResult.Updates) {
-        Write-Host "Windows updates are available."
-        $searchResult.Updates | ForEach-Object { Write-Host $_.Title }
-    } else {
-        Write-Host "No Windows updates available."
-    }
+function Invoke-WingetUpdate {
+    Start-Process "winget" -ArgumentList "upgrade all" -Verb RunAs -NoNewWindow
 }
 
 function Invoke-GitUpdate {
     Write-Host "Updating all Git repositories on the system..."
-    $drives = Get-PSDrive -PSProvider 'FileSystem' | Where-Object { $null -ne $_.Used }
+    $drives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 }
     foreach ($drive in $drives) {
-        $driveRoot = $drive.Root
+        $driveRoot = $drive.DeviceID + "\"
         Write-Host "Searching for Git repositories in $driveRoot"
-        $gitRepos = Get-ChildItem -Path $driveRoot -Recurse -Directory -Filter ".git" -ErrorAction SilentlyContinue
+        $gitRepos = Get-ChildItem -Path $driveRoot -Recurse -Filter ".git" -Directory -ErrorAction SilentlyContinue
         foreach ($repo in $gitRepos) {
-            $repoDir = $repo.FullName
+            $repoDir = $repo.FullName.Replace(".git", "")
             Write-Host "Updating repository at $repoDir"
             Set-Location -Path $repoDir
-            Set-Location -Path ..
             git fetch
-            git pull
-            Set-Location -Path $driveRoot
+            git pull -rebase
         }
     }
 }
@@ -43,6 +31,7 @@ function Invoke-PipUpdate {
 }
 
 Write-Host "Checking for updates..."
-Invoke-WindowsUpdates
+Invoke-WingetUpdate
 Invoke-GitUpdate
 Invoke-PipUpdate
+

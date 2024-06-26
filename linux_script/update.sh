@@ -1,25 +1,15 @@
 #!/bin/bash
 
 echo "Starting the system update using Paru..."
-sudo paru --noconfirm -Syu
+paru --noconfirm -Syu
 
 echo "Starting the update process for Git repositories and pip packages..."
 
-# Define the base directory to search for git repositories
-BASE_DIR=~/github
-
-# Check if the base directory exists
-if [ ! -d "$BASE_DIR" ]; then
-  echo "The directory $BASE_DIR does not exist."
-  exit 1
-fi
-
-# Find all git repositories within the specified directory
-echo "Searching for git repositories in $BASE_DIR..."
-repos=$(find "$BASE_DIR" -type d -name ".git")
+# Find all directories containing .git within the system
+repos=$(find / -type d -name ".git" 2>/dev/null)
 
 if [ -z "$repos" ]; then
-  echo "No git repositories found in $BASE_DIR."
+  echo "No git repositories found in the system."
 else
   # Iterate through each repository and perform git fetch and git pull
   for repo in $repos; do
@@ -35,14 +25,13 @@ else
 
     # Fetch and pull updates
     git fetch
-    git pull
+    git pull -rebase
 
     echo "Repository in $repo_dir updated."
   done
 
-  echo "All repositories in $BASE_DIR have been updated."
+  echo "All repositories in the system have been updated."
 fi
-
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
     echo "jq is not installed. Please install jq to proceed."
