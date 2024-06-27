@@ -6,32 +6,31 @@ paru --noconfirm -Syu
 echo "Starting the update process for Git repositories and pip packages..."
 
 # Find all directories containing .git within the system
-repos=$(find / -type d -name ".git" 2>/dev/null)
-
+repos=$(find $HOME -type d -name ".git" -not -path "$HOME/.*" 2>/dev/null)
 if [ -z "$repos" ]; then
   echo "No git repositories found in the system."
 else
   # Iterate through each repository and perform git fetch and git pull
-  for repo in $repos; do
+  while IFS= read -r repo; do
     # Get the parent directory of the .git directory
     repo_dir=$(dirname "$repo")
     echo "Updating repository in $repo_dir..."
 
-    # Navigate to the repository directory
-    cd "$repo_dir" || {
-      echo "Failed to navigate to $repo_dir. Skipping..."
-      continue
-    }
-
-    # Fetch and pull updates
-    git fetch
-    git pull -rebase
-
-    echo "Repository in $repo_dir updated."
-  done
-
+    # Fetch and pull updates for the repository directory
+    {
+      # Fetch and pull updates
+      if [ -d "$repo_dir/.git" ]; then
+        git -C "$repo_dir" fetch
+        git -C "$repo_dir" pull --rebase
+        echo "Repository in $repo_dir updated."
+      else
+        echo "No .git directory found in $repo_dir. Skipping..."
+      fi
+    } || echo "Failed to update repository in $repo_dir. Skipping..."
+  done <<< "$repos"
   echo "All repositories in the system have been updated."
 fi
+
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
     echo "jq is not installed. Please install jq to proceed."
