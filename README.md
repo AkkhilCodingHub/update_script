@@ -1,4 +1,4 @@
-# Windows Update and Package Management Scripts
+# Windows Package Management Scripts
 
 This project contains PowerShell and Bash scripts for updating Git repositories, pip packages, and checking Windows updates.
 
@@ -36,3 +36,6 @@ This project contains PowerShell and Bash scripts for updating Git repositories,
 - The Bash script updates Git repositories in a specified directory and pip packages.
 - Both scripts may require administrative privileges for certain operations.
 - Ensure you have the necessary permissions to execute the scripts and access relevant directories.
+
+**Recent Updates:**
+- The Bash script now includes clearing the RAM cache after updating packages.
