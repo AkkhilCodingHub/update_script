@@ -1,16 +1,16 @@
-# Windows Package Management Scripts
+# Windows Update Scripts + Linux Update Script
 
 This project contains PowerShell and Bash scripts for updating Git repositories, pip packages, and checking Windows updates.
 
-## PowerShell Script (git_update.ps1)
+## PowerShell Script (update.ps1)
 
 ### Purpose:
 - Checks for Windows updates, updates all Git repositories on the system, and updates pip packages.
 
 ### How to Run:
 1. Open PowerShell.
-2. Navigate to the directory containing `git_update.ps1`.
-3. Run the script by typing `.\git_update.ps1`.
+2. Navigate to the directory containing `update.ps1`.
+3. Run the script by typing `.\update.ps1`.
 
 ### Prerequisites:
 - PowerShell must be enabled to run scripts.
@@ -37,5 +37,8 @@ This project contains PowerShell and Bash scripts for updating Git repositories,
 - Both scripts may require administrative privileges for certain operations.
 - Ensure you have the necessary permissions to execute the scripts and access relevant directories.
 
-**Recent Updates:**
+**Recent Updates:** 
+- The Bash script now includes Distrobox updates
 - The Bash script now includes clearing the RAM cache after updating packages.
+
+- The Powershell script now includes winget updates 
