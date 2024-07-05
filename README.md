@@ -9,7 +9,7 @@ This project contains PowerShell and Bash scripts for updating Git repositories,
 
 ### How to Run:
 1. Open PowerShell.
-2. Navigate to the directory containing `update.ps1`.
+2. Navigate to the directory `.\win_script\update.ps1`.
 3. Run the script by typing `.\update.ps1`.
 
 ### Prerequisites:
@@ -23,7 +23,7 @@ This project contains PowerShell and Bash scripts for updating Git repositories,
 
 ### How to Run:
 1. Open a terminal.
-2. Navigate to the directory containing `update.sh`.
+2. Navigate to the directory `./linux_script/update.sh`.
 3. Run the script by typing `./update.sh`.
 
 ### Prerequisites:
