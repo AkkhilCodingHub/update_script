@@ -2,17 +2,17 @@
 
 # Function to display messages in blue color
 print_blue() {
-    echo -e "\e[1;34m$1\e[0m"
+    echo -e "\e[1;34m$1\e[0m"  # Display message in blue color
 }
 
 # Function to display messages in yellow color
 print_yellow() {
-    echo -e "\e[1;33m$1\e[0m"
+    echo -e "\e[1;33m$1\e[0m"  # Display message in yellow color
 }
 
 # Function to display messages in green color
 print_green() {
-    echo -e "\e[1;32m$1\e[0m"
+    echo -e "\e[1;32m$1\e[0m"  # Display message in green color
 }
 
 # Get the current distribution name and the current user
@@ -88,7 +88,6 @@ if [ "$package_manager" == "apt-get" ]; then
         sudo apt-get install nala -y
     fi
 fi
-
 
 # Update the system using the determined package manager
 case $package_manager in
@@ -183,27 +182,24 @@ print_blue "▶ Starting the update process for Git repositories and pip package
 repos=$(locate -r '/\.git$' | grep "^$HOME" | grep -Ev '/\.[^/]+/|\./' 2>/dev/null)
 
 if [ -z "$repos" ]; then
-  echo -e "\e[1;33m⚠ No git repositories found in the home directory.\e[0m"
+    print_yellow "⚠ No git repositories found in the home directory."
 else
-  # Iterate through each repository and perform git fetch and git pull
-  while IFS= read -r repo; do
-    # Get the parent directory of the .git directory
-    repo_dir=$(dirname "$repo")
-    echo -e "\e[1;34m▶ Updating repository in $repo_dir...\e[0m"
+    print_blue "▶ Starting to update repositories in the home directory..."
+    while IFS= read -r repo; do
+        repo_dir=$(dirname "$repo")
+        print_blue "▶ Updating repository in $repo_dir..."
 
-    # Fetch and pull updates for the repository directory
-    {
-      # Fetch and pull updates
-      if [ -d "$repo_dir/.git" ]; then
-        git -C "$repo_dir" fetch
-        git -C "$repo_dir" pull
-        echo -e "\e[1;32m✔ Repository in $repo_dir updated.\e[0m"
-      else
-        echo -e "\e[1;33m⚠ No .git directory found in $repo_dir. Skipping...\e[0m"
-      fi
-    } || echo -e "\e[1;31m❌ Failed to update repository in $repo_dir. Skipping...\e[0m"
-  done <<< "$repos"
-  echo -e "\e[1;34m▶ All repositories in the home directory have been updated.\e[0m"
+        {
+            if [ -d "$repo_dir/.git" ]; then
+                git -C "$repo_dir" fetch
+                git -C "$repo_dir" pull
+                print_green "✔ Repository in $repo_dir updated."
+            else
+                print_yellow "⚠ No .git directory found in $repo_dir. Skipping..."
+            fi
+        } || print_yellow "❌ Failed to update repository in $repo_dir. Skipping..."
+    done <<< "$repos"
+    print_blue "▶ All repositories in the home directory have been updated."
 fi
 
 # Check if pipx is installed and upgrade packages through it if available
