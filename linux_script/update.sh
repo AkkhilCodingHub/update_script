@@ -170,10 +170,10 @@ if ! command -v locate &> /dev/null; then
             exit 1
             ;;
     esac
-
-    # Perform updatedb after installing locate
-    updatedb
 fi
+
+# Perform updatedb after installing locate
+sudo updatedb
 
 # Notify the start of updating Git repositories and pip packages
 print_blue "▶ Starting the update process for Git repositories and pip packages..."
@@ -200,6 +200,12 @@ else
         } || print_yellow "❌ Failed to update repository in $repo_dir. Skipping..."
     done <<< "$repos"
     print_blue "▶ All repositories in the home directory have been updated."
+fi
+
+# Check if flatpak is installed and update if available
+if command -v flatpak &> /dev/null; then
+    print_yellow "▶ Upgrading flatpak packages "
+    flatpak update
 fi
 
 # Check if pipx is installed and upgrade packages through it if available
@@ -251,4 +257,3 @@ print_green "✔ RAM cache cleared."
 
 # Notify the completion of the update process
 print_blue "▶ Update process completed."
-
