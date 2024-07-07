@@ -170,10 +170,13 @@ if ! command -v locate &> /dev/null; then
             exit 1
             ;;
     esac
+    print_blue "Perform updatedb for checking new repos"
+    sudo updatedb
+else
+    print_yellow "Locate command not present in your repo update part will be skipped" 
+
 fi
 
-# Perform updatedb after installing locate
-sudo updatedb
 
 # Notify the start of updating Git repositories and pip packages
 print_blue "▶ Starting the update process for Git repositories and pip packages..."
