@@ -15,6 +15,20 @@ print_green() {
     echo -e "\e[1;32m$1\e[0m"  # Display message in green color
 }
 
+# Check if a command exists
+command_exists() {
+    command -v "$1" &> /dev/null
+}
+
+# Determine the sudo command to use
+if command_exists sudo; then
+    sudo="sudo"
+elif command_exists doas && [ -f "/etc/doas.conf" ]; then
+    sudo="doas"
+else
+    sudo="su -c"
+fi
+
 # Get the current distribution name and the current user
 distro_name=$(cat /etc/os-release | grep PRETTY_NAME | cut -d'"' -f2)
 current_user=$(whoami)
@@ -70,11 +84,11 @@ esac
 if [ "$package_manager" == "pacman" ]; then
     if ! command -v yay && ! command -v paru; then
         echo "Installing yay as AUR helper..."
-        sudo ${package_manager} --noconfirm -S base-devel
+        $sudo ${package_manager} --noconfirm -S base-devel
         if [ ! -d ~/Github/yay-git ]; then
             mkdir -p ~/Github/yay-git
         fi
-        cd ~/Github && git clone https://aur.archlinux.org/yay-git.git && sudo chown -R $(whoami) ~/Github/yay-git
+        cd ~/Github && git clone https://aur.archlinux.org/yay-git.git && $sudo chown -R $(whoami) ~/Github/yay-git
         cd ~/Github/yay-git && makepkg --noconfirm -si
     else
         echo "AUR helper already installed"
@@ -85,44 +99,44 @@ fi
 if [ "$package_manager" == "apt-get" ]; then
     if ! command -v nala; then
         echo "Installing nala..."
-        sudo apt-get install nala -y
+        $sudo apt-get install nala -y
     fi
 fi
 
 # Update the system using the determined package manager
 case $package_manager in
     yum)
-        yum update -y
+        $sudo yum update -y
         ;;
     paru)
-        paru -Syu --noconfirm
+        $sudo paru -Syu --noconfirm
         ;;
     yay)
-        yay -Syu --noconfirm
-    ;;
+        $sudo yay -Syu --noconfirm
+        ;;
     pacman)
-        yay -Syu --noconfirm
-    ;;
+        $sudo yay -Syu --noconfirm
+        ;;
     emerge)
-        emerge --sync
+        $sudo emerge --sync
         ;;
     zypper)
-        zypper refresh
+        $sudo zypper refresh
         ;;
     nala)
-        nala update && nala upgrade -y
+        $sudo nala update && $sudo nala upgrade -y
         ;;
     apk)
-        apk update
+        $sudo apk update
         ;;
     dnf)
-        dnf update -y
+        $sudo dnf update -y
         ;;
     nix-env)
-        nix-env -u
+        $sudo nix-env -u
         ;;
     rpm)
-        rpm -Uvh
+        $sudo rpm -Uvh
         ;;
     *)
         echo "Unsupported package manager."
@@ -132,14 +146,14 @@ esac
 # Check for dependencies and include jq
 if ! command -v jq &> /dev/null; then
     print_yellow "⚠ jq is not installed. Installing jq..."
-    if [ -x "$(command -v apt-get)" ]; then
-        sudo apt-get install jq -y
-    elif [ -x "$(command -v yum)" ]; then
-        sudo yum install jq -y
+    if [ -x "$(command -v yum)" ]; then
+        $sudo yum install jq -y
     elif [ -x "$(command -v pacman)" ]; then
-        sudo pacman -S jq --noconfirm
+        $sudo pacman -S jq --noconfirm
     elif [ -x "$(command -v apk)" ]; then
-        sudo apk add jq
+        $sudo apk add jq
+    elif [ -x "$(command -v nala)" ]; then
+        $sudo nala install jq -y
     else
         print_yellow "⚠ Unable to install jq. Please install jq manually."
         exit 1
@@ -148,33 +162,28 @@ fi
 
 # Check for locate command and install if not present
 if ! command -v locate &> /dev/null; then
+    print_yellow "⚠ locate command is not installed. Installing locate..."
     case $package_manager in
-        apt-get)
-            print_yellow "⚠ locate command is not installed. Installing locate..."
-            sudo apt-get install mlocate -y
-            ;;
         yum)
-            print_yellow "⚠ locate command is not installed. Installing locate..."
-            sudo yum install mlocate -y
+            $sudo yum install mlocate -y
             ;;
         pacman)
-            print_yellow "⚠ locate command is not installed. Installing locate..."
-            sudo pacman -S mlocate --noconfirm
+            $sudo pacman -S mlocate --noconfirm
             ;;
         apk)
-            print_yellow "⚠ locate command is not installed. Installing locate..."
-            sudo apk add mlocate
+            $sudo apk add mlocate
+            ;;
+        nala)
+            $sudo nala install mlocate -y
             ;;
         *)
-            print_yellow "⚠ locate command is not installed. Unable to install locate command automatically. Please install it manually."
+            print_yellow "⚠ Unable to install locate command automatically. Please install it manually."
             exit 1
             ;;
     esac
-    print_blue "Perform updatedb for checking new repos"
-    sudo updatedb
 else
-    print_yellow "Locate command not present in your repo update part will be skipped" 
-
+    print_blue "Perform updatedb for checking new repos"
+    $sudo updatedb
 fi
 
 
@@ -182,7 +191,7 @@ fi
 print_blue "▶ Starting the update process for Git repositories and pip packages..."
 
 # Find all directories containing .git within the system
-repos=$(locate -r '/\.git$' | grep "^$HOME" | grep -Ev '/\.[^/]+/|\./' 2>/dev/null)
+repos=$($sudo locate -r '/\.git$' | grep "^$HOME" | grep -Ev '/\.[^/]+/|\./' 2>/dev/null)
 
 if [ -z "$repos" ]; then
     print_yellow "⚠ No git repositories found in the home directory."
@@ -194,8 +203,8 @@ else
 
         {
             if [ -d "$repo_dir/.git" ]; then
-                git -C "$repo_dir" fetch
-                git -C "$repo_dir" pull
+                $sudo git -C "$repo_dir" fetch
+                $sudo git -C "$repo_dir" pull
                 print_green "✔ Repository in $repo_dir updated."
             else
                 print_yellow "⚠ No .git directory found in $repo_dir. Skipping..."
@@ -217,7 +226,7 @@ if command -v pipx &> /dev/null; then
     pipx upgrade-all
 elif command -v pip &> /dev/null; then
     # Search for the virtual environment directory and activate it
-    VENV_PATH=$(locate activate | grep '/bin/activate' | grep "^$HOME" | grep -Ev '/\.[^/]+/|\./' | head -n 1)
+    VENV_PATH=$($sudo locate activate | grep '/bin/activate' | grep "^$HOME" | grep -Ev '/\.[^/]+/|\./' | head -n 1)
     if [ -n "$VENV_PATH" ]; then
         print_blue "▶ Activating the virtual environment..."
         source "$VENV_PATH"
@@ -255,7 +264,7 @@ print_green "✔ Distrobox updates complete."
 
 # Clear RAM cache
 print_blue "▶ Clearing RAM cache..."
-sudo sync | sudo tee /proc/sys/vm/drop_caches
+$sudo sync | $sudo tee /proc/sys/vm/drop_caches
 print_green "✔ RAM cache cleared."
 
 # Notify the completion of the update process
