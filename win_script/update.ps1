@@ -5,11 +5,12 @@ function Invoke-WingetUpdate {
 
 function Invoke-GitUpdate {
     Write-Host "<color=green>🟢 Updating all Git repositories on the system...</color>"
-    $drives = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3"
-    foreach ($drive in $drives) {
-        $driveRoot = $drive.DeviceID + "\"
-        Write-Host "<color=green>🟢 Searching for Git repositories in $driveRoot</color>"
-        $gitRepos = Get-ChildItem -Path $driveRoot -Recurse -Filter ".git" -Directory -ErrorAction SilentlyContinue | Where-Object { -not $_.Attributes -band [System.IO.FileAttributes]::System -and -not $_.Attributes -band [System.IO.FileAttributes]::Hidden }
+    $userFolders = [Environment]::GetFolderPath("MyDocuments"), [Environment]::GetFolderPath("Desktop"), [Environment]::GetFolderPath("Downloads"), [Environment]::GetFolderPath("Music"), [Environment]::GetFolderPath("Videos"), [Environment]::GetFolderPath("Pictures")
+    $externalDrives = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=2"
+    $searchLocations = $userFolders + $externalDrives.DeviceID
+    foreach ($location in $searchLocations) {
+        Write-Host "<color=green>🟢 Searching for Git repositories in $location</color>"
+        $gitRepos = Get-ChildItem -Path $location -Recurse -Filter ".git" -Directory -ErrorAction SilentlyContinue | Where-Object { -not $_.Attributes -band [System.IO.FileAttributes]::System -and -not $_.Attributes -band [System.IO.FileAttributes]::Hidden }
         foreach ($repo in $gitRepos) {
             $repoDir = $repo.FullName.Replace(".git", "")
             Write-Host "<color=green>🟢 Updating repository at $repoDir</color>"
@@ -30,13 +31,8 @@ function Invoke-PipUpdate {
     Write-Host "<color=green>🟢 All pip packages have been updated.</color>"
 }
 
-function Clear-RamCache {
-    Write-Host "<color=green>🟢 Clearing RAM cache...</color>"
-    # Add code here to clear RAM cache
-}
-
 Write-Host "<color=green>🟢 Checking for updates...</color>"
 Invoke-WingetUpdate
 Invoke-GitUpdate
 Invoke-PipUpdate
-Clear-RamCache
+
