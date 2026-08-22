@@ -32,6 +32,14 @@ A modular, high-performance system update orchestrator inspired by [Topgrade](ht
 
 ---
 
+### 🎬 Windows Demo Showcase
+
+https://github.com/user-attachments/assets/winupdate-demo.mp4
+
+<video src="assets/winupdate-demo.mp4" controls="controls" width="100%"></video>
+
+---
+
 ### How to Run (Windows)
 
 #### 1. Native Windows Desktop App (`WinUpdate.App.exe`) - GUI
