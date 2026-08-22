@@ -1,0 +1,2 @@
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI\WinUpdate.App.pdb
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI\WinUpdate.App.exe

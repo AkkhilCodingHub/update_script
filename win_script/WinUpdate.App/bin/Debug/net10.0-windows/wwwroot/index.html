@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinUpdate - Native Windows Orchestrator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Header -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="logo-icon">⚡</div>
+                <div class="brand-text">
+                    <h1>WinUpdate</h1>
+                    <span class="badge-tag">.NET 10 Native</span>
+                </div>
+            </div>
+            
+            <div class="system-meta" id="systemMeta">
+                <div class="meta-pill"><span class="label">OS:</span> <span id="metaOs" class="val">Windows</span></div>
+                <div class="meta-pill"><span class="label">Host:</span> <span id="metaHost" class="val">Localhost</span></div>
+                <div class="meta-pill connection-status" id="wsStatus">
+                    <span class="status-dot"></span>
+                    <span id="wsStatusText">Connecting...</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="btnDryRun" class="btn btn-secondary">
+                    <span class="btn-icon">🔍</span> Dry Run
+                </button>
+                <button id="btnRunAll" class="btn btn-primary">
+                    <span class="btn-icon">🚀</span> Update Everything
+                </button>
+                <button id="btnCancel" class="btn btn-danger" style="display: none;">
+                    <span class="btn-icon">⏹</span> Cancel
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon os-icon">💻</div>
+                <div class="stat-details">
+                    <span class="stat-label">Available Modules</span>
+                    <span class="stat-value" id="statAvailable">0 / 0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon success-icon">✔</div>
+                <div class="stat-details">
+                    <span class="stat-label">Updated Steps</span>
+                    <span class="stat-value text-success" id="statSuccess">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon time-icon">⏱</div>
+                <div class="stat-details">
+                    <span class="stat-label">Execution Time</span>
+                    <span class="stat-value" id="statDuration">0.0s</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon state-icon">🔄</div>
+                <div class="stat-details">
+                    <span class="stat-label">Engine State</span>
+                    <span class="stat-value text-info" id="statStatus">Idle</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace -->
+        <main class="workspace-grid">
+            <!-- Left: Steps Matrix -->
+            <section class="panel steps-panel">
+                <div class="panel-header">
+                    <h2>Update Modules</h2>
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-category="all">All</button>
+                        <button class="filter-btn" data-category="System">System</button>
+                        <button class="filter-btn" data-category="PackageManagers">Packages</button>
+                        <button class="filter-btn" data-category="DevRuntimes">Dev Runtimes</button>
+                        <button class="filter-btn" data-category="Containers">Containers</button>
+                        <button class="filter-btn" data-category="Maintenance">Maintenance</button>
+                    </div>
+                </div>
+
+                <div class="steps-list" id="stepsList">
+                    <!-- Dynamic Step Cards injected via JS -->
+                </div>
+            </section>
+
+            <!-- Right: Real-time Live Log Console -->
+            <section class="panel console-panel">
+                <div class="panel-header">
+                    <div class="console-title">
+                        <h2>Live Output Stream</h2>
+                        <span class="active-step-label" id="currentStepLabel">Waiting for run...</span>
+                    </div>
+                    <div class="console-actions">
+                        <button id="btnClearLogs" class="icon-btn" title="Clear Logs">🗑 Clear</button>
+                        <button id="btnAutoScroll" class="icon-btn active" title="Toggle Auto Scroll">⬇ Auto-Scroll</button>
+                    </div>
+                </div>
+
+                <div class="terminal-container" id="terminal">
+                    <div class="terminal-output" id="terminalOutput">
+                        <div class="log-entry system-msg">[System] WinUpdate Orchestrator Web Interface initialized.</div>
+                        <div class="log-entry system-msg">[System] Ready to run modular updates. Click 'Update Everything' or 'Dry Run'.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- SignalR Client Library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

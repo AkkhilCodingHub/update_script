@@ -1,0 +1,295 @@
+<Window x:Class="WinUpdate.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:WinUpdate.App.ViewModels"
+        Title="WinUpdate - Native Windows Orchestrator" 
+        Height="820" Width="1240"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgBaseBrush}"
+        Foreground="{StaticResource TextMainBrush}"
+        FontFamily="Segoe UI Variable, Segoe UI, sans-serif"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="42"
+                      ResizeBorderThickness="6"
+                      GlassFrameThickness="0"
+                      UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <!-- Outer Window Frame -->
+    <Border Background="{StaticResource BgBaseBrush}" 
+            BorderBrush="{StaticResource BorderSubtleBrush}" 
+            BorderThickness="1" 
+            CornerRadius="14">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="42" />   <!-- Custom TitleBar -->
+                <RowDefinition Height="80" />   <!-- Header Bar & Actions -->
+                <RowDefinition Height="*" />    <!-- Main Content Workspace -->
+                <RowDefinition Height="36" />   <!-- Bottom Status Bar -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. Custom TitleBar -->
+            <Grid Grid.Row="0" Background="#0C121E" MouseLeftButtonDown="OnTitleBarMouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Brand Mini -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="⚡" FontSize="14" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="WinUpdate" FontWeight="Bold" FontSize="13" Foreground="{StaticResource TextMainBrush}" VerticalAlignment="Center" />
+                    <Border Background="#162B44" CornerRadius="4" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text=".NET 10 Fluent" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AccentCyanBrush}" />
+                    </Border>
+                </StackPanel>
+
+                <!-- Window Control Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Style="{StaticResource TitleBarButtonStyle}" Content="&#xE921;" Click="OnMinimizeClick" ToolTip="Minimize" />
+                    <Button Style="{StaticResource TitleBarButtonStyle}" Content="&#xE922;" Click="OnMaximizeRestoreClick" ToolTip="Maximize / Restore" />
+                    <Button Style="{StaticResource TitleBarCloseButtonStyle}" Content="&#xE8BB;" Click="OnCloseClick" ToolTip="Close" />
+                </StackPanel>
+            </Grid>
+
+            <!-- 2. Header Bar & Controls -->
+            <Border Grid.Row="1" Background="{StaticResource BgSurfaceBrush}" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,1" Padding="20,0">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Telemetry Pills -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Background="#090E1A" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="20" Padding="12,6" Margin="0,0,8,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Host: " Foreground="{StaticResource TextDimBrush}" FontSize="12" />
+                                <TextBlock Text="{Binding MachineName}" Foreground="{StaticResource TextMainBrush}" FontWeight="SemiBold" FontSize="12" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#090E1A" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="20" Padding="12,6" Margin="0,0,8,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="OS: " Foreground="{StaticResource TextDimBrush}" FontSize="12" />
+                                <TextBlock Text="{Binding OsDescription}" Foreground="{StaticResource TextMainBrush}" FontWeight="SemiBold" FontSize="12" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#090E1A" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="20" Padding="12,6">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" Fill="{StaticResource SuccessEmeraldBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding StatusText}" Foreground="{StaticResource AccentCyanBrush}" FontWeight="SemiBold" FontSize="12" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Primary Action Buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource SecondaryButtonStyle}" 
+                                Content="🔍 Dry Run" 
+                                Command="{Binding DryRunCommand}"
+                                Margin="0,0,10,0" />
+
+                        <Button Style="{StaticResource PrimaryButtonStyle}" 
+                                Content="🚀 Update Everything" 
+                                Command="{Binding RunAllCommand}"
+                                Visibility="{Binding IsNotRunning, Converter={StaticResource BoolToVisConverter}}" />
+
+                        <Button Style="{StaticResource DangerButtonStyle}" 
+                                Content="⏹ Cancel" 
+                                Command="{Binding CancelCommand}"
+                                Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisConverter}}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 3. Main Workspace Grid -->
+            <Grid Grid.Row="2" Margin="18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="480" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Panel: Modules Matrix -->
+                <Border Grid.Column="0" Background="{StaticResource BgSurfaceBrush}" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Filter Bar -->
+                        <Border Grid.Row="0" Padding="16,14" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0" Margin="0,0,0,10">
+                                    <TextBlock Text="Update Modules" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextMainBrush}" VerticalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="All" Command="{Binding SelectAllCommand}" Style="{StaticResource SecondaryButtonStyle}" Padding="8,3" FontSize="11" Margin="0,0,6,0" />
+                                        <Button Content="None" Command="{Binding DeselectAllCommand}" Style="{StaticResource SecondaryButtonStyle}" Padding="8,3" FontSize="11" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Category Filter Pills -->
+                                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Style="{StaticResource CategoryFilterButtonStyle}" Content="All" IsChecked="True" Command="{Binding FilterCategoryCommand}" CommandParameter="All" />
+                                        <RadioButton Style="{StaticResource CategoryFilterButtonStyle}" Content="System" Command="{Binding FilterCategoryCommand}" CommandParameter="System" />
+                                        <RadioButton Style="{StaticResource CategoryFilterButtonStyle}" Content="Packages" Command="{Binding FilterCategoryCommand}" CommandParameter="PackageManagers" />
+                                        <RadioButton Style="{StaticResource CategoryFilterButtonStyle}" Content="Dev Runtimes" Command="{Binding FilterCategoryCommand}" CommandParameter="DevRuntimes" />
+                                        <RadioButton Style="{StaticResource CategoryFilterButtonStyle}" Content="Containers" Command="{Binding FilterCategoryCommand}" CommandParameter="Containers" />
+                                        <RadioButton Style="{StaticResource CategoryFilterButtonStyle}" Content="Maintenance" Command="{Binding FilterCategoryCommand}" CommandParameter="Maintenance" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- Step Cards List -->
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="12">
+                            <ItemsControl ItemsSource="{Binding Steps}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:StepItemViewModel}">
+                                        <Border Background="{StaticResource BgCardBrush}" 
+                                                BorderBrush="{StaticResource BorderSubtleBrush}" 
+                                                BorderThickness="1" 
+                                                CornerRadius="10" 
+                                                Padding="12" 
+                                                Margin="0,0,0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- CheckBox Toggle -->
+                                                <CheckBox Grid.Column="0" 
+                                                          IsChecked="{Binding IsSelected}" 
+                                                          IsEnabled="{Binding IsAvailable}" 
+                                                          VerticalAlignment="Center" 
+                                                          Margin="0,0,12,0" />
+
+                                                <!-- Details -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextMainBrush}" />
+                                                        <Border Background="#0C1524" CornerRadius="4" Padding="5,1" Margin="8,0,0,0">
+                                                            <TextBlock Text="{Binding Category}" FontSize="10" Foreground="{StaticResource TextDimBrush}" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{StaticResource TextDimBrush}" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+
+                                                <!-- Status Badge & Duration -->
+                                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <Border Background="#090E1A" 
+                                                            BorderBrush="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" 
+                                                            BorderThickness="1" 
+                                                            CornerRadius="12" 
+                                                            Padding="10,3">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Ellipse Width="6" Height="6" Fill="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                            <TextBlock Text="{Binding StatusDisplay}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding DurationDisplay}" FontSize="10" Foreground="{StaticResource TextDimBrush}" HorizontalAlignment="Right" Margin="0,3,0,0" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Right Panel: Live Terminal Output -->
+                <Border Grid.Column="2" Background="{StaticResource BgSurfaceBrush}" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Header -->
+                        <Border Grid.Row="0" Padding="16,14" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="Live Execution Stream" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextMainBrush}" VerticalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="Clear Logs" Command="{Binding ClearLogsCommand}" Style="{StaticResource SecondaryButtonStyle}" Padding="10,4" FontSize="11" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Terminal Container -->
+                        <Border Grid.Row="1" Background="{StaticResource BgTerminalBrush}" CornerRadius="0,0,12,12" Padding="12">
+                            <TextBox x:Name="TerminalBox"
+                                     Text="{Binding LogContent, Mode=OneWay}" 
+                                     Background="Transparent" 
+                                     Foreground="#00E5FF" 
+                                     FontFamily="JetBrains Mono, Consolas, Courier New" 
+                                     FontSize="12" 
+                                     IsReadOnly="True" 
+                                     BorderThickness="0" 
+                                     TextWrapping="Wrap" 
+                                     VerticalScrollBarVisibility="Auto" 
+                                     HorizontalScrollBarVisibility="Auto"
+                                     TextChanged="OnTerminalTextChanged" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 4. Bottom Status Bar -->
+            <Border Grid.Row="3" Background="#0C121E" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,1,0,0" Padding="20,0">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Completed summary -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Modules Completed: " Foreground="{StaticResource TextDimBrush}" FontSize="11" />
+                        <TextBlock Text="{Binding CompletedCount}" Foreground="{StaticResource SuccessEmeraldBrush}" FontWeight="Bold" FontSize="11" />
+                        <TextBlock Text=" / " Foreground="{StaticResource TextDimBrush}" FontSize="11" />
+                        <TextBlock Text="{Binding TotalAvailableCount}" Foreground="{StaticResource TextMainBrush}" FontSize="11" />
+                    </StackPanel>
+
+                    <!-- Progress Bar -->
+                    <ProgressBar Grid.Column="1" 
+                                 Value="{Binding ProgressPercentage}" 
+                                 Maximum="100" 
+                                 Height="5" 
+                                 Margin="24,0" 
+                                 Foreground="{StaticResource AccentCyanBrush}" 
+                                 Background="#162138" 
+                                 BorderThickness="0" />
+
+                    <!-- Timing -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Elapsed: " Foreground="{StaticResource TextDimBrush}" FontSize="11" />
+                        <TextBlock Text="{Binding ElapsedTime}" Foreground="{StaticResource AccentCyanBrush}" FontWeight="SemiBold" FontSize="11" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

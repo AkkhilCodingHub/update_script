@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "V732Lu8+Jd4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Akkhil\\Documents\\GitHub\\update_script\\win_script\\WinUpdate.App\\WinUpdate.App.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Akkhil\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.11\\microsoft.net.illink.tasks.10.0.11.nupkg.sha512",
+    "C:\\Users\\Akkhil\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\10.0.11\\microsoft.netcore.app.runtime.win-x64.10.0.11.nupkg.sha512",
+    "C:\\Users\\Akkhil\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\10.0.11\\microsoft.windowsdesktop.app.runtime.win-x64.10.0.11.nupkg.sha512",
+    "C:\\Users\\Akkhil\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\10.0.11\\microsoft.aspnetcore.app.runtime.win-x64.10.0.11.nupkg.sha512"
+  ],
+  "logs": []
+}

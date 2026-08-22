@@ -1,0 +1,15 @@
+{
+  "dryRun": false,
+  "parallelGit": true,
+  "maxGitParallelism": 8,
+  "skipSteps": [],
+  "git": {
+    "customSearchPaths": [],
+    "fetchOnly": false
+  },
+  "cleanup": {
+    "clearUserTemp": true,
+    "clearSystemTemp": true,
+    "emptyRecycleBin": false
+  }
+}

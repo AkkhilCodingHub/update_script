@@ -1,0 +1,70 @@
+{
+  "dryRun": false,
+  "verbose": false,
+  "parallelGit": true,
+  "maxGitParallelism": 8,
+  "stepTimeoutMinutes": 15,
+  "onlySteps": [],
+  "skipSteps": [],
+  "onlyCategories": [],
+  "git": {
+    "enabled": true,
+    "customSearchPaths": [],
+    "scanAllDrives": true,
+    "fetchOnly": false,
+    "ignoredDirectories": [
+      "node_modules",
+      "bin",
+      "obj",
+      ".vs",
+      "AppData",
+      "vendor",
+      "packages",
+      "dist",
+      "build",
+      "target",
+      "$Recycle.Bin",
+      "System Volume Information",
+      "Windows",
+      "Program Files",
+      "Program Files (x86)",
+      "ProgramData"
+    ],
+    "maxSearchDepth": 6
+  },
+  "winget": {
+    "enabled": true,
+    "includeUnknown": true,
+    "acceptAgreements": true
+  },
+  "dotnet": {
+    "enabled": true,
+    "updateGlobalTools": true,
+    "updateWorkloads": true
+  },
+  "python": {
+    "enabled": true,
+    "updatePipPackages": true,
+    "updatePipx": true,
+    "updateUv": true
+  },
+  "node": {
+    "enabled": true,
+    "updateNpm": true,
+    "updateYarn": true,
+    "updatePnpm": true,
+    "updateBun": true,
+    "updateDeno": true
+  },
+  "cleanup": {
+    "enabled": true,
+    "clearUserTemp": true,
+    "clearSystemTemp": true,
+    "clearDeliveryOptimization": true,
+    "emptyRecycleBin": false
+  },
+  "web": {
+    "port": 5000,
+    "host": "localhost"
+  }
+}

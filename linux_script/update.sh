@@ -214,10 +214,13 @@ else
     print_blue "▶ All repositories in the home directory have been updated."
 fi
 
-# Check if flatpak is installed and update if available
-if command -v flatpak &> /dev/null; then
-    print_yellow "▶ Upgrading flatpak packages "
-    flatpak update
+# Check if mise is installed and upgrade tools
+if command -v mise &> /dev/null; then
+    print_blue "▶ Upgrading mise and managed developer tools..."
+    mise self-update -y
+    mise plugins update
+    mise upgrade -y
+    print_green "✔ Mise tools updated."
 fi
 
 # Check if pipx is installed and upgrade packages through it if available

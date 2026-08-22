@@ -1,0 +1,16 @@
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\bin\Debug\net10.0\win-x64\config.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\bin\Debug\net10.0\win-x64\WinUpdate.exe
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\bin\Debug\net10.0\win-x64\WinUpdate.deps.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\bin\Debug\net10.0\win-x64\WinUpdate.runtimeconfig.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\bin\Debug\net10.0\win-x64\WinUpdate.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\bin\Debug\net10.0\win-x64\WinUpdate.pdb
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.AssemblyInfoInputs.cache
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.AssemblyInfo.cs
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.csproj.CoreCompileInputs.cache
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.sourcelink.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\refint\WinUpdate.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.pdb
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\WinUpdate.genruntimeconfig.cache
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\WinUpdate\obj\Debug\net10.0\win-x64\ref\WinUpdate.dll

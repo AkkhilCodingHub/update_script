@@ -1,0 +1,45 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Backgrounds -->
+    <SolidColorBrush x:Key="BgBaseBrush" Color="#090D16" />
+    <SolidColorBrush x:Key="BgSurfaceBrush" Color="#121A2C" />
+    <SolidColorBrush x:Key="BgSurfaceHoverBrush" Color="#1C2844" />
+    <SolidColorBrush x:Key="BgCardBrush" Color="#162138" />
+    <SolidColorBrush x:Key="BgTerminalBrush" Color="#050810" />
+
+    <!-- Borders & Dividers -->
+    <SolidColorBrush x:Key="BorderSubtleBrush" Color="#1E293B" />
+    <SolidColorBrush x:Key="BorderBrightBrush" Color="#334155" />
+    <SolidColorBrush x:Key="BorderCyanGlowBrush" Color="#00E5FF" />
+
+    <!-- Accents -->
+    <SolidColorBrush x:Key="AccentCyanBrush" Color="#00E5FF" />
+    <SolidColorBrush x:Key="AccentPurpleBrush" Color="#8B5CF6" />
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="#3B82F6" />
+    <SolidColorBrush x:Key="SuccessEmeraldBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="WarningAmberBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="DangerCrimsonBrush" Color="#EF4444" />
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextMainBrush" Color="#F8FAFC" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#94A3B8" />
+    <SolidColorBrush x:Key="TextDimBrush" Color="#64748B" />
+
+    <!-- Gradients -->
+    <LinearGradientBrush x:Key="PrimaryButtonGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#00E5FF" Offset="0" />
+        <GradientStop Color="#00A3FF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HeaderBrandGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#94A3B8" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="LogoIconGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#00E5FF" Offset="0" />
+        <GradientStop Color="#8B5CF6" Offset="1" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>

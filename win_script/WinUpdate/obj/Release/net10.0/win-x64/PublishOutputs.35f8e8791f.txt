@@ -1,0 +1,3 @@
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\CLI\WinUpdate.pdb
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\CLI\config.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\CLI\WinUpdate.exe

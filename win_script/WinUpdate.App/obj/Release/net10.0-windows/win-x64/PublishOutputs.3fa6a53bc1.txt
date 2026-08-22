@@ -1,0 +1,10 @@
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\WinUpdate.App.pdb
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\WinUpdate.runtimeconfig.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\config.json
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\D3DCompiler_47_cor3.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\PenImc_cor3.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\PresentationNative_cor3.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\vcruntime140_cor3.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\wpfgfx_cor3.dll
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\WinUpdate.pdb
+C:\Users\Akkhil\Documents\GitHub\update_script\win_script\publish\GUI_SelfContained\WinUpdate.App.exe
